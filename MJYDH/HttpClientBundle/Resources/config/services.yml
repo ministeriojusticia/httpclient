@@ -1,0 +1,4 @@
+services:
+#    mjydh_http_client.example:
+#        class: MJYDH\HttpClientBundle\Example
+#        arguments: ["@service_id", "plain_value", "%parameter%"]

@@ -1,0 +1,22 @@
+{
+    "name": "mjydh/httpclient",
+    "description": "Paquete de utilidades",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Gustavo Campos",
+            "email": "gcampos@santafe.gov.ar"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "MJYDH\\HttpClientBundle\\": "MJYDH/HttpClientBundle"
+        }
+    },
+    "require": {
+        "php": ">=5.0.0"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
