@@ -8,7 +8,7 @@ https://packagist.org/packages/mjydh/httpclient
 ## Instalación del paquete, por ahora la instalación se realiza manualmente.
 
 1 - Descargar el proyecto desde https://github.com/camposgustavoj/httpclient <br>
-2 - crear las carpetas mjydh\httpclient dentro de vendor y colocar el paquete descargado dentro. <br>
+2 - crear las carpetas mjydh dentro de vendor y colocar el paquete descargado dentro. <br>
 3 - agregar en el autoload / psr-4 del composer.json del proyecto la referencia al paquete <br>"MJYDH\\\\HttpClientBundle\\\\": "vendor/mjydh/HttpClientBundle"<br>
 
 "autoload": {<br>
