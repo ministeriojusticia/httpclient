@@ -9,11 +9,11 @@ https://packagist.org/packages/mjydh/httpclient
 
 1 - Descargar el proyecto desde https://github.com/camposgustavoj/httpclient <br>
 2 - crear las carpetas mjydh\httpclient dentro de vendor y colocar el paquete descargado dentro. <br>
-3 - agregar en el autoload / psr-4 del composer.json del proyecto la referencia al paquete <br>"MJYDH\\HttpClientBundle\\": "vendor/mjydh/httpclient/MJYDH/HttpClientBundle"<br>
+3 - agregar en el autoload / psr-4 del composer.json del proyecto la referencia al paquete <br>"MJYDH\\\\HttpClientBundle\\\\": "vendor/mjydh/httpclient/MJYDH/HttpClientBundle"<br>
 
 "autoload": {<br>
         "psr-4": {<br>
-        "MJYDH\\HttpClientBundle\\": "vendor/mjydh/httpclient/MJYDH/HttpClientBundle"<br>
+        "MJYDH\\\\HttpClientBundle\\\\": "vendor/mjydh/httpclient/MJYDH/HttpClientBundle"<br>
     },<br>
 },<br><br>
 
@@ -23,7 +23,7 @@ composer dump-autoload<br>
 ```
 
 En caso de no poder ejecutar el dump-autoload (como sucede en adminformel y formularioelectronico), se debe agregar en \vendor\composer\autoload_psr4.php la siguiente linea
-'MJYDH\\HttpClientBundle\\' => array($vendorDir . '/mjydh/httpclient/MJYDH/HttpClientBundle'),
+'MJYDH\\\\HttpClientBundle\\\\' => array($vendorDir . '/mjydh/httpclient/MJYDH/HttpClientBundle'),
 <br>
 5 - Agregar en el AppKernel.php<br>
 
