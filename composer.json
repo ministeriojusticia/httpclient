@@ -10,8 +10,8 @@
         }
     ],
     "autoload": {
-        "psr-0": {
-            "MJYDH\\HttpClientBundle\\": ""
+        "psr-4": {
+            "MJYDH\\HttpClientBundle\\": "vendor/mjydh/httpclient/MJYDH//HttpClientBundle"
         }
     },
     "require": {
