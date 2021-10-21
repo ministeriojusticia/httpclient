@@ -1,6 +1,3 @@
-Ministerio de Justicia y Derecho Humanos.
-========================
-
 # Ministerio de Justicia y Derecho Humanos.
 
 ## Repositorio 
@@ -28,7 +25,33 @@ composer dump-autoload<br>
 En caso de no poder ejecutar el dump-autoload (como sucede en adminformel y formularioelectronico), se debe agregar en \vendor\composer\autoload_psr4.php la siguiente linea
 'MJYDH\\HttpClientBundle\\' => array($vendorDir . '/mjydh/httpclient/MJYDH/HttpClientBundle'),
 <br>
+5 - Agregar en el AppKernel.php<br>
+
+```php
+new MJYDH\HttpClientBundle\HttpClientBundle(),
+```
 <br>
+
+## Como implementarlo
+
+```php
+// Http client 
+use MJYDH\HttpClientBundle\Service\HttpClient;
+use MJYDH\HttpClientBundle\Exception\HttpException;
+use MJYDH\HttpClientBundle\Service\CatchExceptions;
+
+
+$http = new HttpClient();
+$http->setAuth($user, $pass);
+$http->setHttpCodeResponses(array(200));
+$http->setCatchExceptions(array(502=> new CatchExceptions("Error 502", "titulo 502"), 
+                                0=> new CatchExceptions("Error 0")));
+
+
+$result = $http->Execute('GET', $url);       
+```
+
+```php                         
 
 # Comentarios extras al proyecto 
 
