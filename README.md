@@ -41,17 +41,20 @@ use MJYDH\HttpClientBundle\Exception\HttpException;
 use MJYDH\HttpClientBundle\Service\CatchExceptions;
 
 
-$http = new HttpClient();
-$http->setAuth($user, $pass);
-$http->setHttpCodeResponses(array(200));
-$http->setCatchExceptions(array(502=> new CatchExceptions("Error 502", "titulo 502"), 
-                                0=> new CatchExceptions("Error 0")));
+try
+{
+    $http = new HttpClient();
+    $http->setAuth($user, $pass);
+    $http->setHttpCodeResponses(array(200));
+    $http->setCatchExceptions(array(502=> new CatchExceptions("Error 502", "titulo 502"), 
+                                    0=> new CatchExceptions("Error 0")));
 
 
-$result = $http->Execute('GET', $url);       
+    $result = $http->Execute('GET', $url);      
+
+}
+catch (HttpException $ehttp){return $this->showError($ehttp->getMessage(), $ehttp->getTitle()); }
 ```
-
-```php                         
 
 # Comentarios extras al proyecto 
 
