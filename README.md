@@ -8,14 +8,16 @@ https://packagist.org/packages/mjydh/httpclient
 ## Instalación del paquete, por ahora la instalación se realiza manualmente.
 
 1 - Descargar el proyecto desde https://github.com/camposgustavoj/httpclient <br>
-2 - crear las carpetas mjydh dentro de vendor y colocar el paquete descargado dentro. <br>
-3 - agregar en el autoload / psr-4 del composer.json del proyecto la referencia al paquete <br>"MJYDH\\\\HttpClientBundle\\\\": "vendor/mjydh/HttpClientBundle"<br>
+2 - crear la carpeta mjydh dentro de vendor y colocar el paquete descargado dentro. <br>
+3 - agregar en el autoload / psr-4 del composer.json del proyecto la referencia al paquete 
 
-"autoload": {<br>
-        "psr-4": {<br>
-        "MJYDH\\\\HttpClientBundle\\\\": "vendor/mjydh/HttpClientBundle"<br>
-    },<br>
-},<br><br>
+```json
+"autoload": {
+        "psr-4": {
+        "MJYDH\\HttpClientBundle\\": "vendor/mjydh/HttpClientBundle"
+    },
+},
+```
 
 4 - ejecutar <br>
 ```bash
@@ -23,14 +25,15 @@ composer dump-autoload<br>
 ```
 
 En caso de no poder ejecutar el dump-autoload (como sucede en adminformel y formularioelectronico), se debe agregar en \vendor\composer\autoload_psr4.php la siguiente linea
-'MJYDH\\\\HttpClientBundle\\\\' => array($vendorDir . '/mjydh/HttpClientBundle'),
-<br>
+```php
+'MJYDH\\HttpClientBundle\\' => array($vendorDir . '/mjydh/HttpClientBundle'),
+```
+
 5 - Agregar en el AppKernel.php<br>
 
 ```php
 new MJYDH\HttpClientBundle\HttpClientBundle(),
 ```
-<br>
 
 ## Como implementarlo
 
@@ -56,6 +59,19 @@ try
 catch (HttpException $ehttp){return $this->showError($ehttp->getMessage(), $ehttp->getTitle()); }
 ```
 
+## Fuctions
+
+### setHttpCodeResponses($codesArray)
+     * Setea los http code que debe responder el execute.
+     * Los http code que no esten en las lista, los maneja el execute automaticamente.
+     * 
+     * @param $codesArray array("http_code")
+
+### setCatchExceptions($catchExceptions)
+     * Setea los http codes y sus respectivos mensajes de error que debe capturarse
+     * 
+     * @param $catchExceptions array("http_code" => "Mensaje de error")
+     
 # Comentarios extras al proyecto 
 
 Versionado - https://semver.org/lang/es/<br>
