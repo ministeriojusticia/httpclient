@@ -11,33 +11,83 @@ class HttpClient {
     var $url = null;
     var $user = null;
     var $password = null;
+    var $apikey = null;
+    var $apivalue = null;
     var $httpCodeResponses = null;
     var $catchExceptions = null;
 
+    /**
+     * Setea el title por default que va a tener el HttpException 
+     * 
+     * @param string $error mensage de error
+     */
+    public function setDefatulErrorTitle($error){
+        $this->ERROR_TITLE = $error;
+    }
+
+    /**
+     * Setea la URL de llamada
+     * 
+     * @param string $url url
+     */
     public function setURL($url) { $this->url = $url; }
 
+    /**
+     * Retorna la url 
+     * 
+     * @return string
+     */
     private function getURL()
     {
         if ($this->url === null) { throw new HttpException("Rest Service", "URL request no definida!"); }
 
         return $this->url;
     }
-    
+
+    /**
+     * Setea el usuraio y contraseña para basic auth
+     * 
+     * @param string $user usuario 
+     * @param string $password contraseña
+     */
     public function setAuth($user, $password)
     {
         $this->user = $user;
         $this->password = $password;
     }
     
+    /**
+     * Retorna el usuario 
+     * 
+     * @return string
+     */
     private function getUser() { return $this->user; }
     
+    public function setHeaderApiKey($value, $key = "apikey"){
+        $this->apivalue = $value;
+        $this->apikey = $key;
+    }
+
+    public function getHeaderApiKey(){
+        return $this->apikey;
+    }
+
+    public function getHeaderApiValue(){
+        return $this->apivalue;
+    }
+
+    /**
+     * Retorna la contraseña
+     * 
+     * @return string
+     */
     private function getPassWord() { return $this->password; }
 
     /**
      * Setea los http code que debe responder el execute.
      * Los http code que no esten en las lista, los maneja el execute automaticamente.
      * 
-     * @param $codesArray array("http_code")
+     * @param array("http_code") $codesArray
      */
     public function setHttpCodeResponses($codesArray){
         $this->httpCodeResponses = $codesArray;
@@ -50,7 +100,7 @@ class HttpClient {
     /**
      * Setea los http codes y sus respectivos mensajes de error que debe capturarse
      * 
-     * @param $catchExceptions array("http_code" => "Mensaje de error")
+     * @param array("http_code" => "Mensaje de error") $catchExceptions 
      */
     public function setCatchExceptions($catchExceptions){
         $this->catchExceptions = $catchExceptions;
@@ -69,6 +119,9 @@ class HttpClient {
      *                                                          data: body de la petición
      *                                                          code = 0
      *
+     * @param string $method optional default 'GET'
+     * @param string $url optional 
+     * @param array $params optional 
      */
     public function Execute($method = 'GET', $url = null, $params = null)
     {
@@ -77,7 +130,7 @@ class HttpClient {
             ($url === null) ? $api_request_url = $this->getURL() : $api_request_url = $url;
 
             if (!in_array($method, array("PATCH","DELETE", "GET", "POST", "PUT")))
-                { throw new HttpException($this->ERROR_TITLE, "Metodo no válido!", $method); }
+                { throw new HttpException($this->ERROR_TITLE, "Metodo no válido!"); }
             
             $method_name = $method;
             
@@ -143,6 +196,12 @@ class HttpClient {
                 curl_setopt($ch, CURLOPT_USERPWD, "$user:$pass");
             }
 
+            if ($this->getHeaderApiKey() !== null){
+                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                    $this->getHeaderApiKey().':' . $this->getHeaderApiValue()
+                    ));
+            }
+
             // Let's get the Response!
             //
             $api_response = curl_exec($ch);
@@ -151,15 +210,23 @@ class HttpClient {
             //
             $api_response_info = curl_getinfo($ch);
 
-            // Don't forget to close Curl
-            //
             curl_close($ch);
 
+            /*
+            Here we separate the Response Header from the Response Body
+            */
             $http_code = $api_response_info['http_code'];
+
+            $httpResult = new httpResult();
+            $httpResult->setHttpCode($http_code);
+            $httpResult->setHeader(trim(substr($api_response, 0, $api_response_info['header_size'])));
+            $httpResult->setBody(substr($api_response, $api_response_info['header_size']));
+            $httpResult->setResponse($api_response);
+
 
             if ($this->getHttpCodeResponses() != null){
                 if (in_array($http_code,$this->getHttpCodeResponses())){
-                    return $api_response;
+                    return $httpResult;
                 }
             }
 
@@ -167,21 +234,63 @@ class HttpClient {
             if (isset($httpCatchEx[$http_code])){
                 $catchEx = $httpCatchEx[$http_code];
                 
-                throw new HttpException(($catchEx->getTitle() ? $catchEx->getTitle() : $this->ERROR_TITLE), $httpCatchEx[$http_code]->getMessage(), $api_response);
-            }
-
-            if ($http_code >= 400)
-            {
-                { throw new HttpException($this->ERROR_TITLE, $http_code, $api_response); }
+                throw new HttpException(
+                                ($catchEx->getTitle() ? $catchEx->getTitle() : $this->ERROR_TITLE), 
+                                $httpCatchEx[$http_code]->getMessage(), 
+                                $httpResult);
             }
             
-            return $api_response;
+            if ($http_code >= 400 || $http_code < 100)
+            {
+                throw new HttpException($this->ERROR_TITLE, $http_code, $httpResult);
+            }
+            return $httpResult;
 
         } catch (HttpException $rex) {
-            throw new HttpException($rex->getTitle(), $rex->getMessage(), $rex->getData() );
+            throw new HttpException($rex->getTitle(), $rex->getMessage(), $httpResult);
         } catch (\Exception $ex) {
             throw new HttpException($ex->getCode(), $ex->getMessage());
         }
+    }
+
+}
+
+class httpResult{
+    public $http_code;
+    public $body;
+    public $header;
+    public $response;
+
+    public function setHttpCode($http_code){
+        $this->http_code = $http_code;
+    }
+
+    public function getHttpCode(){
+        return $this->http_code;
+    }
+
+    public function setBody($body){
+        $this->body = $body;
+    }
+
+    public function getBody(){
+        return $this->body;
+    }
+
+    public function setHeader($header){
+        $this->header = $header;
+    }
+
+    public function getHeader(){
+        return $this->header;
+    }
+
+    public function setResponse($response){
+        $this->response = $response;
+    }
+
+    public function getResponse(){
+        return $this->response;
     }
 }
 
