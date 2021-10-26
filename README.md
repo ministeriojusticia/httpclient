@@ -21,7 +21,7 @@ https://packagist.org/packages/mjydh/httpclient
 
 4 - ejecutar <br>
 ```bash
-composer dump-autoload<br>
+composer dump-autoload -o
 ```
 
 En caso de no poder ejecutar el dump-autoload (como sucede en adminformel y formularioelectronico), se debe agregar en \vendor\composer\autoload_psr4.php la siguiente linea
@@ -41,22 +41,27 @@ new MJYDH\HttpClientBundle\HttpClientBundle(),
 // Http client 
 use MJYDH\HttpClientBundle\Service\HttpClient;
 use MJYDH\HttpClientBundle\Exception\HttpException;
-use MJYDH\HttpClientBundle\Service\CatchExceptions;
+use MJYDH\HttpClientBundle\Model\CatchExceptions;
 
 
 try
 {
     $http = new HttpClient();
-    $http->setAuth($user, $pass);
+    $http->setAuth($user, $pass); //En caso que sea por BASIC AUTH
+    $http->setHeaderApiKey($keyValue, "apikey"); //En case que el auto sea por apikey
+    //Se agrega al array todos los http_codes que se quieran recortar cuando se llama al Execute();
     $http->setHttpCodeResponses(array(200));
+    //Se agregan todos los http_codes que tiran un CatchExceptions
     $http->setCatchExceptions(array(502=> new CatchExceptions("Error 502", "titulo 502"), 
                                     0=> new CatchExceptions("Error 0")));
 
-
+    //Ejecuta el http request y retorna un HttpResult
     $result = $http->Execute('GET', $url);      
 
 }
-catch (HttpException $ehttp){return $this->showError($ehttp->getMessage(), $ehttp->getTitle()); }
+catch (HttpException $ehttp){
+    return $this->showError($ehttp->getMessage(), $ehttp->getTitle()); 
+}
 ```
 
 ## Fuctions
