@@ -3,6 +3,8 @@
 namespace MJYDH\HttpClientBundle\Service;
 
 use MJYDH\HttpClientBundle\Exception\HttpException;
+use MJYDH\HttpClientBundle\Model\HttpResult;
+use MJYDH\HttpClientBundle\Model\CatchExceptions;
 
 
 class HttpClient {
@@ -63,7 +65,7 @@ class HttpClient {
      */
     private function getUser() { return $this->user; }
     
-    public function setHeaderApiKey($value, $key = "apikey"){
+    public function setHeaderApiKey(string $value, string $key = "apikey"){
         $this->apivalue = $value;
         $this->apikey = $key;
     }
@@ -100,7 +102,7 @@ class HttpClient {
     /**
      * Setea los http codes y sus respectivos mensajes de error que debe capturarse
      * 
-     * @param array("http_code" => "Mensaje de error") $catchExceptions 
+     * @param array("http_code" => CatchExceptions) $catchExceptions 
      */
     public function setCatchExceptions($catchExceptions){
         $this->catchExceptions = $catchExceptions;
@@ -122,11 +124,15 @@ class HttpClient {
      * @param string $method optional default 'GET'
      * @param string $url optional 
      * @param array $params optional 
+     * 
+     * @return HttpResult
      */
-    public function Execute($method = 'GET', $url = null, $params = null)
+    public function Execute(string $method = 'GET', string $url = null, array $params = null) : HttpResult
     {
         try
         {
+            $httpResult = new HttpResult();
+
             ($url === null) ? $api_request_url = $this->getURL() : $api_request_url = $url;
 
             if (!in_array($method, array("PATCH","DELETE", "GET", "POST", "PUT")))
@@ -217,12 +223,10 @@ class HttpClient {
             */
             $http_code = $api_response_info['http_code'];
 
-            $httpResult = new httpResult();
             $httpResult->setHttpCode($http_code);
             $httpResult->setHeader(trim(substr($api_response, 0, $api_response_info['header_size'])));
             $httpResult->setBody(substr($api_response, $api_response_info['header_size']));
             $httpResult->setResponse($api_response);
-
 
             if ($this->getHttpCodeResponses() != null){
                 if (in_array($http_code,$this->getHttpCodeResponses())){
@@ -249,73 +253,8 @@ class HttpClient {
         } catch (HttpException $rex) {
             throw new HttpException($rex->getTitle(), $rex->getMessage(), $httpResult);
         } catch (\Exception $ex) {
-            throw new HttpException($ex->getCode(), $ex->getMessage());
+            throw new HttpException($ex->getCode(), $ex->getMessage(),$httpResult);
         }
     }
 
-}
-
-class httpResult{
-    public $http_code;
-    public $body;
-    public $header;
-    public $response;
-
-    public function setHttpCode($http_code){
-        $this->http_code = $http_code;
-    }
-
-    public function getHttpCode(){
-        return $this->http_code;
-    }
-
-    public function setBody($body){
-        $this->body = $body;
-    }
-
-    public function getBody(){
-        return $this->body;
-    }
-
-    public function setHeader($header){
-        $this->header = $header;
-    }
-
-    public function getHeader(){
-        return $this->header;
-    }
-
-    public function setResponse($response){
-        $this->response = $response;
-    }
-
-    public function getResponse(){
-        return $this->response;
-    }
-}
-
-class CatchExceptions{
-    public $title = null;
-    public $message = null;
-
-    public function __construct($message, $title = null){
-        $this->message = $message;
-        $this->title = $title;
-    }
-
-    public function setTitle($title){
-        $this->title = $title;
-    }
-
-    public function getTitle(){
-        return $this->title;
-    }
-
-    public function setMessage($message){
-        $this->message = $message;
-    }
-    
-    public function getMessage(){
-        return $this->message;
-    }
 }
