@@ -1,5 +1,9 @@
 # Ministerio de Justicia y Derecho Humanos.
 
+## PHP < 7
+<br><br>
+
+
 ## Repositorio 
 
 https://packagist.org/packages/mjydh/httpclient
