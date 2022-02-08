@@ -17,7 +17,7 @@ class HttpResult{
      * 
      * @param string $http_code
      */
-    public function setHttpCode(string $http_code){
+    public function setHttpCode( $http_code){
         $this->http_code = $http_code;
     }
 
@@ -26,7 +26,7 @@ class HttpResult{
      * 
      * @return string
      */
-    public function getHttpCode() : string  {
+    public function getHttpCode()   {
         return $this->http_code;
     }
 
@@ -35,7 +35,7 @@ class HttpResult{
      * 
      * @param string $body
      */
-    public function setBody(string $body){
+    public function setBody( $body){
         $this->body = $body;
     }
 
@@ -44,7 +44,7 @@ class HttpResult{
      * 
      * @return string
      */
-    public function getBody(): string {
+    public function getBody() {
         return $this->body;
     }
 
@@ -53,7 +53,7 @@ class HttpResult{
      * 
      * @param string $header
      */
-    public function setHeader(string $header){
+    public function setHeader( $header){
         $this->header = $header;
     }
 
@@ -62,7 +62,7 @@ class HttpResult{
      * 
      * @return string
      */
-    public function getHeader() : string{
+    public function getHeader() {
         return $this->header;
     }
 
@@ -80,7 +80,7 @@ class HttpResult{
      * 
      * @return string
      */
-    public function getResponse(): string{
+    public function getResponse(){
         return $this->response;
     }
 }

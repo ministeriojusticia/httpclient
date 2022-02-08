@@ -12,7 +12,7 @@ class CatchExceptions{
      * @param string $message Mensaje de error
      * @param string $title optional Titulo del error
      */
-    public function __construct(string $message, string $title = null){
+    public function __construct( $message,  $title = null){
         $this->message = $message;
         $this->title = $title;
     }
@@ -22,7 +22,7 @@ class CatchExceptions{
      * 
      * @param string $title
      */
-    public function setTitle(string $title){
+    public function setTitle( $title){
         $this->title = $title;
     }
 
@@ -31,7 +31,7 @@ class CatchExceptions{
      * 
      * @return string
      */
-    public function getTitle() : string{
+    public function getTitle() {
         return $this->title;
     }
 
@@ -40,7 +40,7 @@ class CatchExceptions{
      * 
      * @param string $message
      */
-    public function setMessage(string $message){
+    public function setMessage( $message){
         $this->message = $message;
     }
     
@@ -49,7 +49,7 @@ class CatchExceptions{
      * 
      * @return string
      */
-    public function getMessage(): string{
+    public function getMessage(){
         return $this->message;
     }
 }

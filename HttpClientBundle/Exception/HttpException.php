@@ -20,7 +20,7 @@ class HttpException extends \Exception {
      * @param string $message Descripcion del la excepción lanzada
      * @param HttpResult response Respues de la peticion http
      */
-    public function __construct(string $title, string $message, HttpResult $httpResult = null) {
+    public function __construct( $title,  $message, HttpResult $httpResult = null) {
         $this->title = $title;
         $this->httpResult = $httpResult;
         parent::__construct($message, 0);

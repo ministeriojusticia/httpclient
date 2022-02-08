@@ -65,7 +65,7 @@ class HttpClient {
      */
     private function getUser() { return $this->user; }
     
-    public function setHeaderApiKey(string $value, string $key = "apikey"){
+    public function setHeaderApiKey( $value,  $key = "apikey"){
         $this->apivalue = $value;
         $this->apikey = $key;
     }
@@ -127,7 +127,7 @@ class HttpClient {
      * 
      * @return HttpResult
      */
-    public function Execute(string $method = 'GET', string $url = null, array $params = null) : HttpResult
+    public function Execute( $method = 'GET',  $url = null, array $params = null) 
     {
         try
         {
