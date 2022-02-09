@@ -29,10 +29,15 @@ En caso de no poder ejecutar el dump-autoload (como sucede en adminformel y form
 'MJYDH\\HttpClientBundle\\' => array($vendorDir . '/mjydh/HttpClientBundle'),
 ```
 
-5 - Agregar en el AppKernel.php<br>
+5 - Symfony < 3.4 Agregar en el AppKernel.php<br>
 
 ```php
 new MJYDH\HttpClientBundle\HttpClientBundle(),
+```
+5 - Symfony > 4 Agregar en el config/bundles.php<br>
+
+```php
+MJYDH\HttpClientBundle\HttpClientBundle::class=>['all'=>true]
 ```
 
 ## Como implementarlo
