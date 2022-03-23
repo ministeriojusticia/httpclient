@@ -239,7 +239,7 @@ class HttpClient {
                 $catchEx = $httpCatchEx[$http_code];
                 
                 throw new HttpException(
-                                ($catchEx->getTitle() ? $catchEx->getTitle() : $this->ERROR_TITLE), 
+                                (is_null($catchEx->getTitle()) ? $this->ERROR_TITLE : $catchEx->getTitle()), 
                                 $httpCatchEx[$http_code]->getMessage(), 
                                 $httpResult);
             }
