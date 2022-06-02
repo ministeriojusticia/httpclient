@@ -4,7 +4,7 @@ namespace MJYDH\HttpClientBundle\Service;
 
 use MJYDH\HttpClientBundle\Exception\HttpException;
 use MJYDH\HttpClientBundle\Model\HttpResult;
-use MJYDH\HttpClientBundle\Model\CatchExceptions;
+use MJYDH\HttpClientBundle\Exception\CatchExceptions;
 
 
 class HttpClient {
@@ -237,10 +237,9 @@ class HttpClient {
             $httpCatchEx = $this->getCatchExceptions();
             if (isset($httpCatchEx[$http_code])){
                 $catchEx = $httpCatchEx[$http_code];
-                
-                throw new HttpException(
-                                (is_null($catchEx->getTitle()) ? $this->ERROR_TITLE : $catchEx->getTitle()), 
-                                $httpCatchEx[$http_code]->getMessage(), 
+                throw new CatchExceptions(
+                                (is_null($catchEx->getTitle()) ? $this->ERROR_TITLE : $catchEx->getTitle()),
+                                $httpCatchEx[$http_code]->getMessage(),
                                 $httpResult);
             }
             
@@ -250,8 +249,10 @@ class HttpClient {
             }
             return $httpResult;
 
-        } catch (HttpException $rex) {
+        } catch (HttpException $rex) {            
             throw new HttpException($rex->getTitle(), $rex->getMessage(), $httpResult);
+        } catch (CatchExceptions $rex) {
+            throw new CatchExceptions($rex->getTitle(), $rex->getMessage(), $httpResult);
         } catch (\Exception $ex) {
             throw new HttpException($ex->getCode(), $ex->getMessage(),$httpResult);
         }

@@ -1,10 +1,12 @@
 <?php
 
-namespace MJYDH\HttpClientBundle\Model;
+namespace MJYDH\HttpClientBundle\Exception;
 
-class CatchExceptions{
+use MJYDH\HttpClientBundle\Model\HttpResult;
+
+class CatchExceptions  extends \Exception {
+    private $httpResult = null;
     public $title = null;
-    public $message = null;
 
     /**
      * Setea el mensaje y titulo del error. 
@@ -12,9 +14,18 @@ class CatchExceptions{
      * @param string $message Mensaje de error
      * @param string $title optional Titulo del error
      */
-    public function __construct(string $message, string $title = null){
-        $this->message = $message;
+    public function __construct( string $title = null,string $message, HttpResult $httpResult = null) {
         $this->title = $title;
+        $this->httpResult = $httpResult;
+        parent::__construct($message, 0);
+    }
+
+    public function __toString() {
+        return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
+    }
+
+    public function getHttpResult() {
+        return $this->httpResult;
     }
 
     /**
@@ -33,23 +44,5 @@ class CatchExceptions{
      */
     public function getTitle() : ?string{
         return $this->title;
-    }
-
-    /**
-     * Setea el mensaje del error
-     * 
-     * @param string $message
-     */
-    public function setMessage(string $message){
-        $this->message = $message;
-    }
-    
-    /**
-     * Retorna el mensaje de error
-     * 
-     * @return string
-     */
-    public function getMessage(): string{
-        return $this->message;
     }
 }

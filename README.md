@@ -46,7 +46,7 @@ MJYDH\HttpClientBundle\HttpClientBundle::class=>['all'=>true]
 // Http client 
 use MJYDH\HttpClientBundle\Service\HttpClient;
 use MJYDH\HttpClientBundle\Exception\HttpException;
-use MJYDH\HttpClientBundle\Model\CatchExceptions;
+use MJYDH\HttpClientBundle\Exception\CatchExceptions;
 
 
 try
@@ -57,14 +57,16 @@ try
     //Se agrega al array todos los http_codes que se quieran recortar cuando se llama al Execute();
     $http->setHttpCodeResponses(array(200));
     //Se agregan todos los http_codes que tiran un CatchExceptions
-    $http->setCatchExceptions(array(502=> new CatchExceptions("Error 502", "titulo 502"), 
-                                    0=> new CatchExceptions("Error 0")));
+    $http->setCatchExceptions(array(502=> new CatchExceptions("Titulo - Error 502", "Mensaje de error"), 
+                                    0=> new CatchExceptions("Titulo - Error 502", "Mensaje de error")));
 
     //Ejecuta el http request y retorna un HttpResult
     $result = $http->Execute('GET', $url);      
 
 }
-catch (HttpException $ehttp){
+} catch (CatchExceptions $cehttp) {
+    return $this->showError($cehttp->getMessage(), $cehttp->getTitle()); 
+}catch (HttpException $ehttp){
     return $this->showError($ehttp->getMessage(), $ehttp->getTitle()); 
 }
 ```
