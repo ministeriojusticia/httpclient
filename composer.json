@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "MJYDH\\HttpClientBundle\\": "vendor/mjydh/mjydh-library/HttpClientBundle"
+            "MJYDH\\HttpClientBundle\\": "vendor/mjydh/httpclient/HttpClientBundle"
         }
     },
     "require": {
