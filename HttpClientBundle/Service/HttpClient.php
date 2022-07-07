@@ -17,6 +17,48 @@ class HttpClient {
     var $apivalue = null;
     var $httpCodeResponses = null;
     var $catchExceptions = null;
+    //Proxy
+    var $proxy = null;
+    var $proxyPort = null;
+    var $proxyUser=null;
+    var $proxyPassword=null;
+
+
+    /**
+     *  Seteo el proxy
+     * 
+     *  @param string $proxy proxy
+     */
+    public function setProxy($proxy){
+        $this->proxy = $proxy;
+    }
+
+    /**
+     *  Seteo puerto del proxy
+     * 
+     *  @param int $port port
+     */
+    public function setProxyPort($port){
+        $this->proxyPort = $port;
+    }
+
+    /**
+     *  Seteo el Usuario del proxy
+     * 
+     *  @param string $user user
+     */
+    public function setProxyUser($user){
+        $this->proxyUser = $user;
+    }
+
+    /**
+     *  Seteo las pass del proxy
+     * 
+     *  @param string $password password
+     */
+    public function setProxyPassword($password){
+        $this->proxyPassword = $password;
+    }
 
     /**
      * Setea el title por default que va a tener el HttpException 
@@ -190,6 +232,21 @@ class HttpClient {
             // Allows Curl to connect to an API server through HTTPS
             //
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            /**
+             * Configuracion del Proxy
+             */
+            if($this->proxy!==null and $this->proxyPort!==null){
+                
+                curl_setopt($ch, CURLOPT_PROXY, $this->proxy);
+                curl_setopt($ch, CURLOPT_PROXYPORT, $this->proxyPort);
+                
+            }
+
+            if($this->proxyUser!==null and $this->proxyPassword!==null){
+                
+                curl_setopt ($ch, CURLOPT_PROXYUSERPWD, $this->proxyUser.":".$this->proxyPassword); 
+            }
             
             // Si tiene usuario es BASIC AUTH
             //
